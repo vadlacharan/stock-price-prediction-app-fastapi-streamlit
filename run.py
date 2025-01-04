@@ -12,9 +12,9 @@ def install_requirements(venv_path):
     
     # Install dependencies from requirements.txt
     commands = [
-        f"source {activate_path} && pip install -r requirements.txt"
+        f"pip install -r requirements.txt"
         if os.name != "nt"
-        else f"call {activate_path} && pip install -r requirements.txt "
+        else f"pip install -r requirements.txt "
     ]
 
     for command in commands:
