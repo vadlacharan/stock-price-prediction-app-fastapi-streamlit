@@ -3,18 +3,16 @@ import subprocess
 import sys
 
 
-def install_requirements(venv_path):
+def install_requirements():
     """Install dependencies from requirements.txt without updating the file."""
     print("Installing requirements...")
 
-    # Activate the virtual environment
-    activate_path = os.path.join(venv_path, "Scripts", "activate") if os.name == "nt" else os.path.join(venv_path, "bin", "activate")
     
     # Install dependencies from requirements.txt
     commands = [
-        f"source {activate_path} && pip install -r requirements.txt"
+        f"pip install -r requirements.txt"
         if os.name != "nt"
-        else f"call {activate_path} && pip install -r requirements.txt "
+        else f"pip install -r requirements.txt "
     ]
 
     for command in commands:
@@ -31,18 +29,17 @@ def run_app(command, app_name):
 
 if __name__ == "__main__":
     # Define paths
-    venv_path = "backend/venv"  # Shared virtual environment path
 
     try:
         # Step 1: Install dependencies from requirements.txt
-        install_requirements(venv_path)
+        install_requirements()
 
         # Step 2: Run both apps
-        backend_process = run_app(f"source backend/venv/bin/activate && cd backend && uvicorn main:app --reload", "FastAPI Backend") \
-            if os.name != "nt" else run_app(f"call backend\\venv\\Scripts\\activate && cd backend && fastapi dev main.py", "FastAPI Backend")
+        backend_process = run_app(f"cd backend && uvicorn main:app --reload", "FastAPI Backend") \
+            if os.name != "nt" else run_app(f"cd backend && main:app --reload", "FastAPI Backend")
 
-        frontend_process = run_app(f"source backend/venv/bin/activate && cd frontend && streamlit run app.py", "Streamlit Frontend") \
-            if os.name != "nt" else run_app(f"call backend\\venv\\Scripts\\activate && cd frontend && streamlit run main.py", "Streamlit Frontend")
+        frontend_process = run_app(f" cd frontend && streamlit run app.py", "Streamlit Frontend") \
+            if os.name != "nt" else run_app(f" cd frontend && streamlit run main.py", "Streamlit Frontend")
 
         print("Both Backend and Frontend are running!")
 
